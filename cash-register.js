@@ -4,6 +4,8 @@ function checkCashRegister(price, cash, cid) { //cid -> cash in drawer
     let totalCash = 0; //var to hold total cash in register
 
     let cidReverse = [...cid].reverse();
+
+    let temporaryHold = []; //this will hold a temporary array of each change from the currency unit
     
 
     let cashValue = { //object to show base currency unit
@@ -45,11 +47,26 @@ function checkCashRegister(price, cash, cid) { //cid -> cash in drawer
                 change -= unitTotal //subtract unitTotal from change since all unitTotal was used
                 change = parseFloat(change.toFixed(2));
                 return unitTotal; //amount taken from this unit which == full unitTotal
-
             }
         }
         else { //No change can be taken from this unit
             return 0;
+        }
+    }
+
+
+    //Function to implement cashUnit for each unit
+    function getChange(){
+        let changeOwed = cash - price; //find full amount of change  due
+        for(let [index, value] of cidReverse.entries()){
+            let changeGotten = cashUnit(value[0], index);
+            if (changeGotten > 0){
+                temporaryHold.push([value[0], changeGotten]); //helps access both the key and value pairs
+            }
+            if(change === 0) {break}; //this terminates is change has been derived
+        }
+        if(totalCash < changeOwed || change !== 0){
+            changeDue.status = "INSUFFICIENT_FUNDS"
         }
     }
 }
