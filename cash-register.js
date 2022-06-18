@@ -1,5 +1,5 @@
 function checkCashRegister(price, cash, cid) { //cid -> cash in drawer
-    let change = price - cash; //this is for change
+    let change = cash - price; //this is for change
 
     let totalCash = 0; //var to hold total cash in register
 
@@ -35,8 +35,8 @@ function checkCashRegister(price, cash, cid) { //cid -> cash in drawer
     //function to check if some currency unit can offset some change in the cash register
 
     function cashUnit(unit,index){ //unit -> this reps the cashValue  obj & index -> reps the cid unit amount
-        let unitTotal = cidReverse[index][1] //get currency unit total from cid
-        let amount = Math.floor(change / cashValue[unit]) //check max possible amount that can be offset from change
+        let unitTotal = cidReverse[index][1]; //get currency unit total from cid
+        let amount = Math.floor(change / cashValue[unit]) * cashValue[unit]; //check max possible amount that can be offset from change
 
         if(unitTotal > 0){ //check if some unit can be paid from this unit
             if(unitTotal >= amount){ //this indicates there is enough unit total to offset max possible amount
@@ -63,11 +63,24 @@ function checkCashRegister(price, cash, cid) { //cid -> cash in drawer
             if (changeGotten > 0){
                 temporaryHold.push([value[0], changeGotten]); //helps access both the key and value pairs
             }
-            if(change === 0) {break}; //this terminates is change has been derived
+            if(change === 0) {break}; //this terminates if change has been derived
         }
         if(totalCash < changeOwed || change !== 0){
             changeDue.status = "INSUFFICIENT_FUNDS"
         }
+        else if(totalCash == changeOwed){
+            changeDue.status = "CLOSED";
+            changeDue.change = [...cid];
+        }
+        else{
+            changeDue.status = "OPEN";
+            changeDue.change = [...temporaryHold];
+        }
     }
+
+    getChange();
+    return changeDue;
 }
-console.log(checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]));
+
+
+console.log(checkCashRegister(3.26, 100, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]));
