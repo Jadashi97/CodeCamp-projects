@@ -1,5 +1,6 @@
 function convertToRoman(num) {
-    //
+    // key value objects with numerals and decimals to refrence what needs to be converted
+
    const numerals = {
     1: 'I',
     4: 'IV',
@@ -15,11 +16,10 @@ function convertToRoman(num) {
     900: 'CM',
     1000: 'M'
    };
-
    let romanized = " ";
 
-   const decimalKeys  = Object.keys(numerals).reverse();
-
+   const decimalKeys  = Object.keys(numerals).reverse(); //this holds all the decimal keys in the object
+   
    decimalKeys.forEach(decimal => {
     while(decimal <= num){
         romanized += numerals[decimal];
@@ -30,4 +30,4 @@ function convertToRoman(num) {
     return romanized;
 }
 
-console.log(convertToRoman(10));
+console.log(convertToRoman(25));
